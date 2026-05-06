@@ -1,0 +1,31 @@
+# Generated reports
+*_DD_Report_*.html
+*_Analysis.html
+*_Forensic_Report.html
+*_Dashboard.html
+charts.html
+mckinsey-charts.html
+example-report_*.html
+
+# Sensitive deal documents (DO NOT COMMIT)
+*.pdf
+ma-dd-skill/*.pdf
+
+# Data files
+*.csv
+!package-lock.json
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Secrets
+.env
+.env.local

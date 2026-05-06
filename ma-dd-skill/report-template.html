@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{REPORT_TITLE}}</title>
+<style>
+  /* ============================================================
+     McKinsey-Style Report CSS — Zero Dependencies, Print-Ready
+     ============================================================ */
+
+  :root {
+    --navy:       #003A70;
+    --navy-dark:  #002545;
+    --blue:       #0066A1;
+    --blue-light: #7FA9C7;
+    --blue-pale:  #E8F0F6;
+    --gold:       #C4A35A;
+    --red:        #C0392B;
+    --amber:      #E67E22;
+    --green:      #27AE60;
+    --gray-dark:  #4A4A4A;
+    --gray:       #8C8C8C;
+    --gray-light: #D5D5D5;
+    --gray-pale:  #F5F5F5;
+    --white:      #FFFFFF;
+    --black:      #1A1A1A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: var(--black);
+    background: var(--white);
+    max-width: 210mm; /* A4 */
+    margin: 0 auto;
+  }
+
+  /* ---- TYPOGRAPHY ---- */
+  h1, h2, h3, .action-title, .cover-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: bold;
+  }
+  .cover-title {
+    font-size: 28pt;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .cover-subtitle {
+    font-size: 14pt;
+    color: var(--blue-light);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    margin-top: 12px;
+  }
+  .section-header {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16pt;
+    color: var(--navy);
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 6px;
+    margin-bottom: 20px;
+  }
+  .action-title {
+    font-size: 12pt;
+    color: var(--navy);
+    margin-bottom: 14px;
+    line-height: 1.35;
+  }
+  .exhibit-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8pt;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+  }
+
+  /* ---- PAGE LAYOUT ---- */
+  .page {
+    padding: 25mm 20mm 20mm 20mm;
+    page-break-after: always;
+    min-height: 297mm;
+  }
+  .page.cover {
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--white);
+    min-height: 297mm;
+  }
+  .page.cover .divider {
+    width: 60px;
+    height: 3px;
+    background: var(--gold);
+    margin: 24px auto;
+  }
+  .page.cover .meta {
+    font-size: 9pt;
+    color: var(--blue-light);
+    margin-top: 8px;
+  }
+  .page.cover .confidential {
+    font-size: 8pt;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+  }
+
+  /* ---- EXECUTIVE SUMMARY ---- */
+  .exec-summary {
+    background: var(--gray-pale);
+    border-left: 4px solid var(--navy);
+    padding: 20px 24px;
+  }
+  .scqa-grid {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 10px 16px;
+    margin-top: 16px;
+  }
+  .scqa-label {
+    font-weight: bold;
+    color: var(--navy);
+    font-size: 9pt;
+    text-transform: uppercase;
+  }
+
+  /* ---- TABLES ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: 12px 0;
+  }
+  th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--gray-light);
+  }
+  tr:nth-child(even) td {
+    background: var(--gray-pale);
+  }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .highlight-row td { background: var(--blue-pale) !important; font-weight: bold; }
+  .risk-red { color: var(--red); font-weight: bold; }
+  .risk-amber { color: var(--amber); font-weight: bold; }
+  .risk-green { color: var(--green); font-weight: bold; }
+
+  /* ---- CALLOUT BOX ---- */
+  .callout {
+    background: var(--blue-pale);
+    border-left: 4px solid var(--blue);
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 9.5pt;
+  }
+  .callout.warning {
+    background: #FDF2F2;
+    border-left-color: var(--red);
+  }
+
+  /* ---- KEY METRIC ROW ---- */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .kpi-card {
+    text-align: center;
+    padding: 16px 8px;
+    background: var(--gray-pale);
+  }
+  .kpi-value {
+    font-family: Georgia, serif;
+    font-size: 22pt;
+    color: var(--navy);
+    font-weight: bold;
+    line-height: 1.1;
+  }
+  .kpi-label {
+    font-size: 8pt;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  /* ---- CHARTS ---- */
+  .chart-container {
+    width: 100%;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .chart-container svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* ---- RISK MATRIX ---- */
+  .risk-matrix {
+    display: grid;
+    grid-template-columns: 120px repeat(3, 1fr);
+    grid-template-rows: auto repeat(3, 1fr);
+    gap: 2px;
+    margin: 20px 0;
+    font-size: 8pt;
+  }
+  .risk-matrix .cell {
+    padding: 14px 8px;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+  }
+  .risk-matrix .header {
+    background: var(--navy);
+    color: var(--white);
+    font-weight: bold;
+    font-size: 8pt;
+    text-transform: uppercase;
+  }
+  .risk-matrix .zone-green  { background: #D5F5E3; }
+  .risk-matrix .zone-amber  { background: #FDEBD0; }
+  .risk-matrix .zone-red    { background: #FADBD8; }
+
+  /* ---- FOOTER ---- */
+  .page-footer {
+    font-size: 7.5pt;
+    color: var(--gray);
+    border-top: 1px solid var(--gray-light);
+    padding-top: 8px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ---- PRINT ---- */
+  @media print {
+    body {
+      max-width: none;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      padding: 18mm 15mm 15mm 15mm;
+      page-break-after: always;
+    }
+    .page.cover { page-break-after: always; }
+    .no-print { display: none; }
+  }
+
+  /* ---- PRINT PAGE BREAK CONTROL ---- */
+  @media print {
+    .page { page-break-after: always; }
+  }
+
+  /* ---- DAMODARAN SYNTHESIS ---- */
+  .damodaran-dimension {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--gray-light);
+  }
+  .damodaran-dimension:last-child { border-bottom: none; }
+  .dimension-label {
+    font-family: Georgia, serif;
+    font-size: 11pt;
+    color: var(--navy);
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .damodaran-signature {
+    margin-top: 24px;
+    font-style: italic;
+    color: var(--gray-dark);
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     COVER PAGE
+     ============================================================ -->
+<div class="page cover">
+  <div class="confidential">{{CONFIDENTIAL_LABEL}}</div>
+  <h1 class="cover-title">{{COVER_TITLE}}</h1>
+  <div class="cover-subtitle">{{COVER_SUBTITLE}}</div>
+  <div class="divider"></div>
+  <div class="meta">{{COVER_DATE}}</div>
+  <div class="meta">{{COVER_PREPARED_FOR}}</div>
+  <div class="meta" style="margin-top:30px;">{{COVER_PREPARED_BY}}</div>
+</div>
+
+<!-- ============================================================
+     EXECUTIVE SUMMARY
+     ============================================================ -->
+<div class="page">
+  <h2 class="section-header">执行摘要 Executive Summary</h2>
+
+  <div class="exec-summary">
+    <p class="action-title">{{EXEC_ANSWER}}</p>
+  </div>
+
+  <div class="scqa-grid">
+    <div class="scqa-label">Situation</div>
+    <div>{{EXEC_SITUATION}}</div>
+    <div class="scqa-label">Complication</div>
+    <div>{{EXEC_COMPLICATION}}</div>
+    <div class="scqa-label">Question</div>
+    <div>{{EXEC_QUESTION}}</div>
+    <div class="scqa-label">Answer</div>
+    <div><strong>{{EXEC_ANSWER_DETAIL}}</strong></div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row">
+    {{KPI_CARDS}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>机密 · 仅供内部决策使用</span>
+    <span>1</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 1: TARGET COMPANY OVERVIEW
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 1 · 交易概览</div>
+  <h3 class="action-title">{{E1_ACTION_TITLE}}</h3>
+
+  <table>
+    {{E1_COMPANY_TABLE}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:20px;margin-bottom:8px;">业务描述</h4>
+  <p style="font-size:9.5pt;">{{E1_BUSINESS_DESC}}</p>
+
+  <h4 style="color:var(--navy);margin-top:16px;margin-bottom:8px;">组织架构</h4>
+  <pre style="font-size:8.5pt;line-height:1.5;background:var(--gray-pale);padding:12px;">{{E1_ORG_CHART}}</pre>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：FDD Section 01; 管理层信息</span>
+    <span>2</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 2: HISTORICAL FINANCIAL PERFORMANCE
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 2 · 历史财务表现</div>
+  <h3 class="action-title">{{E2_ACTION_TITLE}}</h3>
+
+  <div class="chart-container">
+    {{E2_GP_EBITDA_CHART}}
+  </div>
+
+  <table>
+    {{E2_PL_TABLE}}
+  </table>
+
+  <div class="kpi-row">
+    {{E2_KPI_CARDS}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：FDD pp.54-59; GT Pro Forma Consolidation</span>
+    <span>3</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 3: QUALITY OF EARNINGS
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 3 · 盈利质量分析</div>
+  <h3 class="action-title">{{E3_ACTION_TITLE}}</h3>
+
+  <div class="chart-container">
+    {{E3_WATERFALL_CHART}}
+  </div>
+
+  <table>
+    {{E3_QOE_TABLE}}
+  </table>
+
+  <div class="callout">
+    <strong>关键调整项说明</strong><br>
+    {{E3_ADJUSTMENT_NOTES}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：FDD pp.16-18; GT QoE Analysis</span>
+    <span>4</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 4: NET DEBT & WORKING CAPITAL
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 4 · 净负债与营运资本</div>
+  <h3 class="action-title">{{E4_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">净负债桥 Net Debt Bridge</h4>
+  <table>
+    {{E4_NET_DEBT_TABLE}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:20px;margin-bottom:8px;">净营运资本趋势</h4>
+  <table>
+    {{E4_NWC_TABLE}}
+  </table>
+
+  <div class="callout">
+    <strong>NWC Peg 建议：</strong>{{E4_NWC_PEG}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：FDD pp.19-22; GT Net Debt & NWC Analysis</span>
+    <span>5</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 5: VALUATION ANALYSIS
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 5 · 估值分析</div>
+  <h3 class="action-title">{{E5_ACTION_TITLE}}</h3>
+
+  <div class="chart-container">
+    {{E5_FOOTBALL_FIELD_CHART}}
+  </div>
+
+  <table>
+    {{E5_VALUATION_SUMMARY_TABLE}}
+  </table>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;">
+    <div>
+      <h4 style="color:var(--navy);font-size:9pt;">WACC 参数</h4>
+      <table style="font-size:8pt;">
+        {{E5_WACC_TABLE}}
+      </table>
+    </div>
+    <div>
+      <h4 style="color:var(--navy);font-size:9pt;">情景概率加权</h4>
+      <table style="font-size:8pt;">
+        {{E5_SCENARIO_TABLE}}
+      </table>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>达摩达兰归纳：</strong>{{E5_DAMODARAN_SYNTHESIS}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：GT Analysis; Damodaran Online; Capital IQ</span>
+    <span>6</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 6: RISK ASSESSMENT
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 6 · 风险评估</div>
+  <h3 class="action-title">{{E6_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">风险矩阵 Risk Matrix</h4>
+  <div class="risk-matrix">
+    {{E6_RISK_MATRIX}}
+  </div>
+
+  <h4 style="color:var(--navy);margin-top:20px;margin-bottom:8px;">关键风险登记表</h4>
+  <table style="font-size:8pt;">
+    {{E6_RISK_TABLE}}
+  </table>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：FDD pp.12-15; Tax DD pp.5-9</span>
+    <span>7</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 7: TAX RISK SUMMARY
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 7 · 税务风险摘要</div>
+  <h3 class="action-title">{{E7_ACTION_TITLE}}</h3>
+
+  <table style="font-size:8pt;">
+    {{E7_TAX_RISK_TABLE}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:20px;margin-bottom:8px;">SPA 税务保护条款建议</h4>
+  <div class="callout">
+    {{E7_SPA_RECOMMENDATIONS}}
+  </div>
+
+  <table style="font-size:8pt;">
+    {{E7_TAX_ATTRIBUTES_TABLE}}
+  </table>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：Tax DD pp.5-28; GT Red Flag Tax DD Report</span>
+    <span>8</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 8: INVESTMENT RECOMMENDATION
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 8 · 投资建议</div>
+  <h3 class="action-title">{{E8_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">企业价值到股权价值桥 EV → Equity Value</h4>
+  <table>
+    {{E8_VALUE_BRIDGE_TABLE}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:20px;margin-bottom:8px;">谈判策略</h4>
+  <table style="font-size:8pt;">
+    {{E8_NEGOTIATION_TABLE}}
+  </table>
+
+  <div class="callout {{E8_RECOMMENDATION_CLASS}}">
+    <strong>建议：{{E8_RECOMMENDATION}}</strong><br>
+    {{E8_RECOMMENDATION_DETAIL}}
+  </div>
+
+  <h4 style="color:var(--navy);margin-top:20px;margin-bottom:8px;">下一步行动</h4>
+  <ol style="font-size:9pt;padding-left:20px;">
+    {{E8_NEXT_STEPS}}
+  </ol>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：GT Analysis; 综合 Phase 3-7 产出</span>
+    <span>9</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     APPENDIX
+     ============================================================ -->
+<div class="page">
+  <h2 class="section-header">附录 Appendix</h2>
+
+  <h4 style="color:var(--navy);margin-top:16px;">A. 详细财务预测（5年）</h4>
+  <table style="font-size:7.5pt;">
+    {{APP_FINANCIAL_MODEL}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:20px;">B. 可比公司分析详情</h4>
+  <table style="font-size:7.5pt;">
+    {{APP_COMPARABLES}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:20px;">C. DCF 敏感性分析</h4>
+  <table style="font-size:7.5pt;">
+    {{APP_SENSITIVITY}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:20px;">D. 来源与免责声明</h4>
+  <p style="font-size:8pt;color:var(--gray);">{{APP_DISCLAIMER}}</p>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>附录</span>
+    <span>A</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     APPENDIX E: DAMODARAN SYNTHESIS
+     ============================================================ -->
+<div class="page">
+  <h2 class="section-header">附录 E. 达莫达兰估值归纳 Damodaran's Synthesis</h2>
+
+  <div class="callout" style="margin-bottom:20px;">
+    <strong>关于本篇归纳：</strong>以下为 Aswath Damodaran 以第一人称对本交易估值的完整归纳，涵盖其 7 个核心心智模型在本次尽调中的应用判断。这不是估值数据的重复，而是从估值哲学层面对本交易的最终审视。
+  </div>
+
+  {{APP_DAMODARAN}}
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>附录 E · Damodaran Synthesis</span>
+    <span>E</span>
+  </div>
+</div>
+
+</body>
+</html>

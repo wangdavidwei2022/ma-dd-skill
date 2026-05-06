@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{REPORT_TITLE}}</title>
+<style>
+  /* ============================================================
+     Tax Planning Report CSS — Zero Dependencies, Print-Ready
+     ============================================================ */
+
+  :root {
+    --navy:       #003A70;
+    --navy-dark:  #002545;
+    --blue:       #0066A1;
+    --blue-light: #7FA9C7;
+    --blue-pale:  #E8F0F6;
+    --gold:       #C4A35A;
+    --red:        #C0392B;
+    --amber:      #E67E22;
+    --green:      #27AE60;
+    --green-pale: #D5F5E3;
+    --gray-dark:  #4A4A4A;
+    --gray:       #8C8C8C;
+    --gray-light: #D5D5D5;
+    --gray-pale:  #F5F5F5;
+    --white:      #FFFFFF;
+    --black:      #1A1A1A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.6;
+    color: var(--black);
+    background: var(--white);
+    max-width: 210mm;
+    margin: 0 auto;
+  }
+
+  /* ---- TYPOGRAPHY ---- */
+  h1, h2, h3, .action-title, .cover-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: bold;
+  }
+  .cover-title {
+    font-size: 28pt;
+    color: var(--white);
+    line-height: 1.2;
+  }
+  .cover-subtitle {
+    font-size: 14pt;
+    color: var(--blue-light);
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 300;
+    margin-top: 12px;
+  }
+  .section-header {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16pt;
+    color: var(--navy);
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 6px;
+    margin-bottom: 20px;
+  }
+  .action-title {
+    font-size: 12pt;
+    color: var(--navy);
+    margin-bottom: 14px;
+    line-height: 1.35;
+  }
+  .exhibit-label {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 8pt;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+  }
+
+  /* ---- PAGE LAYOUT ---- */
+  .page {
+    padding: 25mm 20mm 20mm 20mm;
+    page-break-after: always;
+    min-height: 297mm;
+  }
+  .page.cover {
+    background: var(--navy);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--white);
+    min-height: 297mm;
+  }
+  .page.cover .divider {
+    width: 60px;
+    height: 3px;
+    background: var(--gold);
+    margin: 24px auto;
+  }
+  .page.cover .meta {
+    font-size: 9pt;
+    color: var(--blue-light);
+    margin-top: 8px;
+  }
+  .page.cover .confidential {
+    font-size: 8pt;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 40px;
+  }
+
+  /* ---- EXECUTIVE SUMMARY ---- */
+  .exec-summary {
+    background: var(--gray-pale);
+    border-left: 4px solid var(--navy);
+    padding: 20px 24px;
+  }
+  .scqa-grid {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 10px 16px;
+    margin-top: 16px;
+  }
+  .scqa-label {
+    font-weight: bold;
+    color: var(--navy);
+    font-size: 9pt;
+    text-transform: uppercase;
+  }
+
+  /* ---- TABLES ---- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+    margin: 12px 0;
+  }
+  th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 8.5pt;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--gray-light);
+  }
+  tr:nth-child(even) td {
+    background: var(--gray-pale);
+  }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .highlight-row td { background: var(--blue-pale) !important; font-weight: bold; }
+  .risk-red { color: var(--red); font-weight: bold; }
+  .risk-amber { color: var(--amber); font-weight: bold; }
+  .risk-green { color: var(--green); font-weight: bold; }
+  .tax-saving { color: var(--green); font-weight: bold; }
+  .tax-loss { color: var(--red); font-weight: bold; }
+
+  /* ---- CALLOUT BOX ---- */
+  .callout {
+    background: var(--blue-pale);
+    border-left: 4px solid var(--blue);
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 9.5pt;
+  }
+  .callout.warning {
+    background: #FDF2F2;
+    border-left-color: var(--red);
+  }
+  .callout.success {
+    background: #F0FAF0;
+    border-left-color: var(--green);
+  }
+
+  /* ---- KEY METRIC ROW ---- */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .kpi-card {
+    text-align: center;
+    padding: 14px 6px;
+    background: var(--gray-pale);
+  }
+  .kpi-value {
+    font-family: Georgia, serif;
+    font-size: 20pt;
+    color: var(--navy);
+    font-weight: bold;
+    line-height: 1.1;
+  }
+  .kpi-value.risk-high { color: var(--red); }
+  .kpi-value.risk-mid { color: var(--amber); }
+  .kpi-value.safe { color: var(--green); }
+  .kpi-label {
+    font-size: 7.5pt;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  /* ---- CHARTS ---- */
+  .chart-container {
+    width: 100%;
+    margin: 20px 0;
+    text-align: center;
+  }
+  .chart-container svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* ---- RISK MATRIX ---- */
+  .risk-matrix {
+    display: grid;
+    grid-template-columns: 120px repeat(3, 1fr);
+    grid-template-rows: auto repeat(3, 1fr);
+    gap: 2px;
+    margin: 20px 0;
+    font-size: 8pt;
+  }
+  .risk-matrix .cell {
+    padding: 14px 8px;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+  }
+  .risk-matrix .header {
+    background: var(--navy);
+    color: var(--white);
+    font-weight: bold;
+    font-size: 8pt;
+    text-transform: uppercase;
+  }
+  .risk-matrix .zone-green  { background: #D5F5E3; }
+  .risk-matrix .zone-amber  { background: #FDEBD0; }
+  .risk-matrix .zone-red    { background: #FADBD8; }
+
+  /* ---- OPTIMIZATION CARD ---- */
+  .opt-card {
+    border: 1px solid var(--gray-light);
+    padding: 16px;
+    margin: 14px 0;
+    page-break-inside: avoid;
+  }
+  .opt-card.top1 { border-left: 4px solid var(--red); }
+  .opt-card.top2 { border-left: 4px solid var(--amber); }
+  .opt-card.top3 { border-left: 4px solid var(--blue); }
+  .opt-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .opt-card-title {
+    font-family: Georgia, serif;
+    font-size: 12pt;
+    color: var(--navy);
+    font-weight: bold;
+  }
+  .opt-card-score {
+    font-size: 9pt;
+    color: var(--gray-dark);
+  }
+  .opt-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .opt-metric {
+    text-align: center;
+    padding: 8px;
+    background: var(--gray-pale);
+  }
+  .opt-metric-value {
+    font-family: Georgia, serif;
+    font-size: 14pt;
+    color: var(--navy);
+    font-weight: bold;
+  }
+  .opt-metric-label {
+    font-size: 7pt;
+    color: var(--gray);
+    text-transform: uppercase;
+  }
+
+  /* ---- TIMELINE ---- */
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 16px 0;
+  }
+  .timeline-phase {
+    padding: 16px;
+    border-top: 4px solid;
+  }
+  .timeline-phase.now { border-color: var(--red); background: #FDF2F2; }
+  .timeline-phase.next { border-color: var(--amber); background: #FEF9E7; }
+  .timeline-phase.later { border-color: var(--blue); background: var(--blue-pale); }
+  .timeline-phase h4 {
+    font-size: 10pt;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .timeline-phase ul {
+    font-size: 8.5pt;
+    padding-left: 16px;
+  }
+  .timeline-phase li {
+    margin-bottom: 4px;
+  }
+
+  /* ---- COMPATIBILITY TAG ---- */
+  .globe-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 7.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  .globe-tag.compatible { background: var(--green-pale); color: var(--green); }
+  .globe-tag.caution { background: #FDEBD0; color: var(--amber); }
+
+  /* ---- FOOTER ---- */
+  .page-footer {
+    font-size: 7.5pt;
+    color: var(--gray);
+    border-top: 1px solid var(--gray-light);
+    padding-top: 8px;
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* ---- PRINT ---- */
+  @media print {
+    body {
+      max-width: none;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .page {
+      padding: 18mm 15mm 15mm 15mm;
+      page-break-after: always;
+    }
+    .page.cover { page-break-after: always; }
+    .no-print { display: none; }
+  }
+
+  @media print {
+    .page { page-break-after: always; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     COVER PAGE
+     ============================================================ -->
+<div class="page cover">
+  <div class="confidential">{{CONFIDENTIAL_LABEL}}</div>
+  <h1 class="cover-title">{{COVER_TITLE}}</h1>
+  <div class="cover-subtitle">{{COVER_SUBTITLE}}</div>
+  <div class="divider"></div>
+  <div class="meta">{{COVER_DATE}}</div>
+  <div class="meta">{{COVER_PREPARED_FOR}}</div>
+  <div class="meta" style="margin-top:30px;">{{COVER_PREPARED_BY}}</div>
+</div>
+
+<!-- ============================================================
+     EXECUTIVE SUMMARY
+     ============================================================ -->
+<div class="page">
+  <h2 class="section-header">执行摘要 Executive Summary</h2>
+
+  <div class="exec-summary">
+    <p class="action-title">{{EXEC_ANSWER}}</p>
+  </div>
+
+  <div class="scqa-grid">
+    <div class="scqa-label">Situation</div>
+    <div>{{EXEC_SITUATION}}</div>
+    <div class="scqa-label">Complication</div>
+    <div>{{EXEC_COMPLICATION}}</div>
+    <div class="scqa-label">Question</div>
+    <div>{{EXEC_QUESTION}}</div>
+    <div class="scqa-label">Answer</div>
+    <div><strong>{{EXEC_ANSWER_DETAIL}}</strong></div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row">
+    {{KPI_CARDS}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>机密 · 仅供内部决策使用</span>
+    <span>1</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 1: GROUP STRUCTURE & TAX PROFILE
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 1 · 集团架构与税务画像</div>
+  <h3 class="action-title">{{E1_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">集团股权架构</h4>
+  <pre style="font-size:8.5pt;line-height:1.5;background:var(--gray-pale);padding:12px;white-space:pre-wrap;">{{E1_ORG_CHART}}</pre>
+
+  <h4 style="color:var(--navy);margin-top:16px;margin-bottom:8px;">各主体税务档案</h4>
+  <table>
+    {{E1_TAX_PROFILE_TABLE}}
+  </table>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：用户提供信息；AI分析</span>
+    <span>2</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 2: INDUSTRY TAX DIAGNOSIS
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 2 · 行业税务专项诊断</div>
+  <h3 class="action-title">{{E2_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">适用优惠政策检查</h4>
+  <table>
+    {{E2_INDUSTRY_TABLE}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:16px;margin-bottom:8px;">辖区实际税负 vs 法定税率</h4>
+  <div class="chart-container">
+    {{E2_ETR_CHART}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：用户提供信息；中国税法；OECD BEPS</span>
+    <span>3</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 3: GLOBE ASSESSMENT
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 3 · 全球最低税 GloBE 评估</div>
+  <h3 class="action-title">{{E3_ACTION_TITLE}}</h3>
+
+  <table>
+    {{E3_GLOBE_TABLE}}
+  </table>
+
+  <div class="callout {{E3_GLOBE_CALLOUT_CLASS}}">
+    <strong>GloBE结论：</strong>{{E3_GLOBE_CONCLUSION}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：OECD Pillar Two Model Rules；用户提供数据</span>
+    <span>4</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 4: TRADITIONAL TAX ARCHITECTURE DIAGNOSIS
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 4 · 传统税务架构诊断</div>
+  <h3 class="action-title">{{E4_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">利润分布 vs 经济实质</h4>
+  <div class="chart-container">
+    {{E4_PROFIT_VS_SUBSTANCE_CHART}}
+  </div>
+
+  <h4 style="color:var(--navy);margin-top:16px;margin-bottom:8px;">无形资产配置</h4>
+  <table style="font-size:8pt;">
+    {{E4_IP_TABLE}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:16px;margin-bottom:8px;">关联交易风险</h4>
+  <table style="font-size:8pt;">
+    {{E4_RPT_TABLE}}
+  </table>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：用户提供信息；OECD BEPS Action 8-10</span>
+    <span>5</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 4 CONTINUED: SHAREHOLDER TAX & EXIT
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 4 续 · 股东层面税负与退出路径</div>
+  <h3 class="action-title">{{E4_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">股东层面税负分析</h4>
+  <table>
+    {{E4_SHAREHOLDER_TAX_TABLE}}
+  </table>
+
+  <div class="callout warning">
+    <strong>退出的税务风险：</strong>{{E4_EXIT_TAX_RISK}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：中国个税法；7号公告；CFC规则</span>
+    <span>6</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 5: TRANSFER PRICING RISK ASSESSMENT
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 5 · 转让定价风险评估</div>
+  <h3 class="action-title">{{E5_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">风险评估矩阵（5维度加权评分）</h4>
+  <table>
+    {{E5_TP_SCORING_TABLE}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:16px;margin-bottom:8px;">风险维度评分</h4>
+  <div class="chart-container">
+    {{E5_TP_RISK_CHART}}
+  </div>
+
+  <h4 style="color:var(--navy);margin-top:16px;margin-bottom:8px;">同期资料合规状态</h4>
+  <div class="callout warning">
+    {{E5_TP_DOCUMENTATION_STATUS}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：OECD TP Guidelines；中国42号公告</span>
+    <span>7</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 6: TAX RISK DASHBOARD
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 6 · 税务风险仪表盘</div>
+  <h3 class="action-title">{{E6_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">风险矩阵 Risk Matrix</h4>
+  <div class="risk-matrix">
+    {{E6_RISK_MATRIX}}
+  </div>
+
+  <h4 style="color:var(--navy);margin-top:20px;margin-bottom:8px;">按领域分布</h4>
+  <table style="font-size:8pt;">
+    {{E6_RISK_BY_DOMAIN_TABLE}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:16px;margin-bottom:8px;">紧急事项时间线</h4>
+  <table style="font-size:8pt;">
+    {{E6_URGENCY_TIMELINE}}
+  </table>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：综合Phase 1诊断 + Phase 3风险仪表盘</span>
+    <span>8</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 7: OPTIMIZATION RECOMMENDATIONS
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 7 · 优化建议 TOP3</div>
+  <h3 class="action-title">{{E7_ACTION_TITLE}}</h3>
+
+  <h4 style="color:var(--navy);margin-bottom:8px;">优先级排序（节税 × 可行性 × 紧迫性）</h4>
+  <table>
+    {{E7_PRIORITY_TABLE}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:20px;margin-bottom:8px;">税负优化路径</h4>
+  <div class="chart-container">
+    {{E7_WATERFALL_CHART}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：AI税务筹划分析</span>
+    <span>9</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 7 CONTINUED: TOP3 DETAIL CARDS
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 7 续 · TOP3方案详情</div>
+
+  {{E7_TOP3_CARDS}}
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：AI税务筹划分析</span>
+    <span>10</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     EXHIBIT 8: IMPLEMENTATION ROADMAP
+     ============================================================ -->
+<div class="page">
+  <div class="exhibit-label">Exhibit 8 · 实施路线图</div>
+  <h3 class="action-title">{{E8_ACTION_TITLE}}</h3>
+
+  {{E8_TIMELINE}}
+
+  <h4 style="color:var(--navy);margin-top:20px;margin-bottom:8px;">前置条件清单</h4>
+  <table style="font-size:8.5pt;">
+    {{E8_PREREQUISITES}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:16px;margin-bottom:8px;">需外部顾问支持的事项</h4>
+  <div class="callout">
+    {{E8_EXTERNAL_ADVISORS}}
+  </div>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>来源：AI税务筹划分析</span>
+    <span>11</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     APPENDIX
+     ============================================================ -->
+<div class="page">
+  <h2 class="section-header">附录 Appendix</h2>
+
+  <h4 style="color:var(--navy);margin-top:16px;">A. 全部优化策略详情</h4>
+  <div style="font-size:8.5pt;">
+    {{APP_ALL_STRATEGIES}}
+  </div>
+
+  <h4 style="color:var(--navy);margin-top:20px;">B. 各主体税务档案</h4>
+  <table style="font-size:8pt;">
+    {{APP_ENTITY_PROFILES}}
+  </table>
+
+  <h4 style="color:var(--navy);margin-top:20px;">C. CFC / 7号公告 / 退出税专项分析</h4>
+  <div style="font-size:8.5pt;">
+    {{APP_CFC_ANALYSIS}}
+  </div>
+
+  <h4 style="color:var(--navy);margin-top:20px;">D. 来源与免责声明</h4>
+  <p style="font-size:8pt;color:var(--gray);">{{APP_DISCLAIMER}}</p>
+
+  <div class="page-footer">
+    <span>{{REPORT_REF}}</span>
+    <span>附录</span>
+    <span>A</span>
+  </div>
+</div>
+
+</body>
+</html>
